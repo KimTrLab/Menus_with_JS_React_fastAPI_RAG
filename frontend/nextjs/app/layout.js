@@ -1,9 +1,19 @@
 
+/*
+ * 이 파일은 Next.js 앱 전체에 공통으로 적용되는 최상위 레이아웃입니다.
+ * 공통 CSS, 헤더, 채팅 사이드바를 배치하고 현재 페이지를 children 위치에 표시합니다.
+ */
+
+// 앱 전체에 적용할 전역 CSS 파일을 불러옵니다.
 import "./globals.css";
 
+// 모든 페이지 위쪽에 표시할 공통 헤더입니다.
 import Header from "@/components/Header";
+// 모든 페이지 옆에 표시할 채팅 사이드바입니다.
 import ChatSidebar from "@/components/ChatSidebar";
 
+// export default는 이 파일의 대표 컴포넌트를 내보내며, Next.js는 app/layout.js 규칙에 따라 루트 레이아웃으로 사용합니다.
+// children은 현재 URL에 해당하는 페이지 내용이 Next.js로부터 전달되는 prop입니다.
 export default function RootLayout({ children }) {
   return (
     <html lang="ko">
@@ -14,6 +24,7 @@ export default function RootLayout({ children }) {
           <ChatSidebar />
 
           <main className="main-area">
+            {/* 페이지마다 달라지는 내용은 공통 레이아웃의 이 자리에 들어옵니다. */}
             {children}
           </main>
         </div>
@@ -21,11 +32,3 @@ export default function RootLayout({ children }) {
     </html>
   );
 }
-
-// app/layout.js를 불러옵니다.
-// app/page.js에 작성된 코드를 {children} 자리에 쏙 집어넣어 완성된 HTML을 만듭니다.
-// 그 결과 브라우저 화면에는 [헤더 + 사이드바 + page.js의 내용]이 합쳐져서 나타나게 됩니다.
-
-// 개발자가 layout.js라는 이름으로 파일을 만들고 그 안에 export default function RootLayout이라고 적어두면,
-// Next.js가 프로젝트를 빌드하거나 실행할 때 "아, 이 파일이 우리 웹사이트 전체의 기본 레이아웃(RootLayout)이구나!" 하고 약속된 규칙에 따라 내부적으로 알아서 찾아냅니다.
-// 사용자가 웹사이트에 접속하면 Next.js가 주도적으로 이 RootLayout을 가장 먼저 호출하고, 그 안에 필요한 페이지(page.js)를 쏙 집어넣어 완성된 HTML을 브라우저에 보내줍니다.

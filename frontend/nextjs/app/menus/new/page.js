@@ -1,7 +1,15 @@
 
 "use client";
 
+/*
+ * 이 파일은 새 메뉴 등록 페이지("/menus/new")입니다.
+ * 메뉴 입력 폼을 페이지 안에 배치하며 실제 입력 및 등록 처리는 폼 컴포넌트가 담당합니다.
+ */
+
+// 사용자가 메뉴 정보를 입력할 수 있는 폼 컴포넌트입니다.
 import MenuInputForm from "@/components/MenuInputForm";
+
+// default export는 Next.js가 이 파일을 등록 페이지로 사용할 수 있도록 대표 컴포넌트를 내보냅니다.
 export default function NewMenuPage() { 
     return (
         <section>

@@ -2,9 +2,9 @@
     {
         "id": 9,
         "name": "군만두",
-        "calories": 350,
+        "calories": 3500,
         "description": "속을 채운 만두를 바삭하게 구운 음식",
-        "recommendation": 278
+        "recommendation": 279
     },
     {
         "id": 10,
@@ -26,13 +26,6 @@
         "calories": 350,
         "description": "된장과 두부 채소를 넣어 끓인 찌개",
         "recommendation": 217
-    },
-    {
-        "id": 13,
-        "name": "순두부찌개",
-        "calories": 400,
-        "description": "부드러운 순두부를 매콤하게 끓인 찌개",
-        "recommendation": 328
     },
     {
         "id": 14,
@@ -661,5 +654,12 @@
         "name": "1122",
         "calories": 22,
         "description": "222"
+    },
+    {
+        "id": 106,
+        "name": "77",
+        "calories": 77,
+        "description": "77",
+        "recommendation": 7
     }
 ]
