@@ -36,8 +36,6 @@ export default function MenusPage() {
 
     return (
         <section>
-            <h2>전체 메뉴 목록</h2>
-
             <form onSubmit={handleSearch}>
                 <input
                     value={keyword}

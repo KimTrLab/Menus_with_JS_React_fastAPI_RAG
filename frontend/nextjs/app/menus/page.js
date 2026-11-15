@@ -37,17 +37,14 @@ export default function MenusPage() {
     return (
         <section>
             <h2>전체 메뉴 목록</h2>
-
             <form onSubmit={handleSearch}>
                 <input
                     value={keyword}
                     onChange={(e) => setKeyword(e.target.value)}
                     placeholder="메뉴 검색"
                 />
-
                 <button type="submit">검색</button>
             </form>
-
             <MenuTable
                 menus={menus}
                 onRefresh={loadMenus}

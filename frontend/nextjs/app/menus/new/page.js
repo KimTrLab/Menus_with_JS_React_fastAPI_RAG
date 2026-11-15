@@ -1,18 +1,54 @@
 
 "use client";
 
-import { useRouter } from "next/navigation";
-import MenuForm from "@/components/MenuForm";
+import MenuInputForm from "@/components/MenuInputForm";
+export default function NewMenuPage() { 
+    return (
+        <section>
+            <h2>새 메뉴 등록</h2>
+            <MenuInputForm />
+        </section>
+    );
+}
+
+
+//콜백방식으로 개발한다면
+//콜백 방식을 사용하는 이유는 자식 컴포넌트가 부모 컴포넌트의 기능을 실행할 수 있도록 하기 위해서입니다.
+//React의 부모와 자식 관계를 이해하면 자연스럽게 이해할 수 있습니다.
+
+// 1. 왜 콜백 함수가 필요할까요?  
+// 현재 컴포넌트가 두 개 있습니다.  컴포넌트의 계층 구조와 책임 분리(Separation of Concerns) 문제
+// NewMenuPage: 메뉴 등록 페이지
+// MenuInputForm: 메뉴 입력 폼
+// 각 컴포넌트의 역할을 생각해 보겠습니다.
+
+// 컴포넌트 담당 역할
+// 부모(NewMenuPage)
+// API 통신, 페이지 이동
+
+// 자식(MenuInputForm)
+// 사용자 입력, 입력값 전달
+/*
+NewMenuPage.jsx
+"use client";
+
+import MenuInputForm from "@/components/MenuInputForm";
 import { addMenu } from "@/services/api";
+import { useRouter } from "next/navigation";
 
 export default function NewMenuPage() {
+
     const router = useRouter();
 
+    // 메뉴 등록 함수
     async function handleSave(menuObject) {
         try {
             await addMenu(menuObject);
+
             alert("메뉴가 등록되었습니다.");
+
             router.push("/menus");
+
         } catch (error) {
             alert(error.message);
         }
@@ -21,7 +57,69 @@ export default function NewMenuPage() {
     return (
         <section>
             <h2>새 메뉴 등록</h2>
-            <MenuForm onSave={handleSave} />
+
+            <MenuInputForm handleSave={handleSave} />
         </section>
     );
 }
+
+MenuInputForm.jsx
+"use client";
+
+export default function MenuInputForm({ handleSave }) {
+
+    function submitForm(event) {
+
+        // 기본 새로고침 방지
+        event.preventDefault();
+
+        // FormData 가져오기
+        const formData = new FormData(event.target);
+
+        // 객체 생성
+        const menuObject = {
+            name: formData.get("name"),
+            calories: Number(formData.get("calories")),
+            description: formData.get("description")
+        };
+
+        // 부모 컴포넌트의 함수 호출
+        handleSave(menuObject);
+    }
+
+    return (
+        <div>
+            <form onSubmit={submitForm}>
+                <div>
+                    <label htmlFor="name">메뉴 이름:</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="calories">칼로리:</label>
+                    <input
+                        type="number"
+                        id="calories"
+                        name="calories"
+                        required
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="description">설명:</label>
+                    <textarea
+                        id="description"
+                        name="description"
+                    />
+                </div>
+
+                <button type="submit">등록</button>
+            </form>
+        </div>
+    );
+}*/

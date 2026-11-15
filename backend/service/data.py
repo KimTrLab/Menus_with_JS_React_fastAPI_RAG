@@ -50,7 +50,8 @@ def add_menu(menu):   ## 객체를 받은 것.
         "id": next_id,
         "name":menu["name"],
         "calories":menu["calories"],
-        "description":menu["description"]
+        "description":menu["description"],
+        "recommendation":0
     }
     ##print('22')
     menus.append(new_menu)

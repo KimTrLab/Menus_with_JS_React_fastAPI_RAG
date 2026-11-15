@@ -38,8 +38,14 @@ export default function Home() {
 
       <div className="recommend-list">
         {menus.map((menu) => (
+          // <div className="card" key={menu.id}>  //key 입력 React가 화면을 업데이트할 때 어떤 항목이 추가되고, 삭제되고, 변경되었는지 효율적으로 파악
+          //   <h3>{menu.name}</h3>
+          //   <p>칼로리: {menu.calories} kcal</p>
+          //   <p>{menu.description}</p>
+          // </div>
           <MenuCard key={menu.id} menu={menu} />
         ))}
+        
       </div>
     </section>
   );

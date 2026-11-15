@@ -3,15 +3,15 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
+import MenuModifyForm from "@/components/MenuModifyForm";
 
-import MenuForm from "@/components/MenuForm";
 import {
     getMenuOne,
     updateMenu
 } from "@/services/api";
 
 export default function EditMenuPage() {
-    const { id } = useParams();
+    const { id } = useParams();  //현재 URL에 포함된 동적 경로의 값을 가져오는 코드
     const router = useRouter();
 
     const [menu, setMenu] = useState(null);
@@ -44,7 +44,7 @@ export default function EditMenuPage() {
     return (
         <section>
             <h2>메뉴 수정</h2>
-            <MenuForm
+            <MenuModifyForm
                 initialData={menu}
                 onSave={handleSave}
             />

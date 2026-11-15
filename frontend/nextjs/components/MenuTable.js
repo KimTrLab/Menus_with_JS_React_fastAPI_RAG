@@ -17,6 +17,7 @@ export default function MenuTable({ menus, onRefresh }) {
         }
     }
 
+    
     async function handleRecommend(id) {
         try {
             await recommendMenu(id);
