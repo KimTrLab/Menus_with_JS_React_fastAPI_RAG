@@ -26,10 +26,8 @@ export default function RootLayout({ children }) {
     <html lang="ko">
       <body>
         <Header />
-
         <div className="app-layout">
           <ChatSidebar />
-
           <main className="main-area">
             {/* 페이지마다 달라지는 내용은 공통 레이아웃의 이 자리에 들어옵니다. */}
             {children}

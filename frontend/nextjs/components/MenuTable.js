@@ -14,7 +14,6 @@ import { deleteMenu, recommendMenu } from "@/services/api";
 // menus와 onRefresh는 부모가 전달하는 props입니다.
 // default export는 이 표 컴포넌트를 다른 파일에서 기본 내보내기로 가져오게 합니다.
 export default function MenuTable({ menus, onRefresh }) {
-
     async function handleDelete(id) {
         // 사용자가 취소하면 삭제 요청을 보내지 않고 함수를 끝냅니다.
         if (!confirm("정말 삭제하시겠습니까?")) return;

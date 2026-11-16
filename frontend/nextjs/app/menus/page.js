@@ -16,7 +16,7 @@ import {
 } from "@/services/api";
 
 // 메뉴 배열을 표 형태로 표시하는 자식 컴포넌트입니다.
-import MenuTable from "@/components/MenuTable";
+import MenuTable from "@/components/MenuTable_paging";
 
 // default export는 이 파일의 대표 컴포넌트를 Next.js 페이지로 내보냅니다.
 export default function MenusPage() {

@@ -6,7 +6,8 @@
  * 서버에서 메뉴 목록을 받아 무작위로 최대 3개 골라 추천 카드로 보여 줍니다.
  * useState/useEffect를 사용하므로 브라우저에서 실행되는 클라이언트 컴포넌트입니다.
  */
-
+import Image from "next/image";
+import appImage from "./img/app.jpg";
 // React가 제공하는 상태(state)와 화면 표시 후 작업(effect) 기능을 가져옵니다.
 import { useEffect, useState } from "react";
 // 메뉴 데이터를 가져오는 프로젝트 내부 API 함수입니다. "@/..."는 프로젝트 경로 별칭입니다.
@@ -27,12 +28,9 @@ export default function Home() {
     async function loadMenus() {
       try {
         const data = await getAllMenus();
-
         // [...data]는 배열을 얕은 복사합니다. 새 배열이므로 sort가 원본 data의 순서를 바꾸지 않습니다.
         // 단, 배열 안의 메뉴 객체까지 복제하는 것은 아닙니다. sort로 섞은 뒤 slice(0, 3)으로 앞의 최대 3개를 선택합니다.
-        const selected = [...data]
-          .sort(() => Math.random() - 0.5)
-          .slice(0, 3);
+        const selected = [...data].sort(() => Math.random() - 0.5).slice(0, 3);
 
         // 상태를 갱신하면 React가 화면을 다시 그립니다.
         setMenus(selected);
@@ -54,7 +52,13 @@ export default function Home() {
   return (
     <section>
       <h2>오늘의 추천 메뉴</h2>
-
+      <Image
+        src={appImage}
+        alt="오늘의 추천 메뉴"
+        width={400}
+        height={300}
+      />
+      <img src="/img/app.JPG" alt="오늘의 추천 메뉴" />
       <div className="recommend-list">
         {menus.map((menu) => (
           // map은 배열의 각 메뉴를 화면 요소로 변환합니다.
@@ -66,7 +70,7 @@ export default function Home() {
           // </div>
           <MenuCard key={menu.id} menu={menu} />
         ))}
-        
+
       </div>
     </section>
   );

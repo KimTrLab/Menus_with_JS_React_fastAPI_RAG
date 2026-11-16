@@ -15,7 +15,7 @@ import {
 } from "@/services/api";
 
 // 조회한 메뉴를 표로 렌더링하는 컴포넌트입니다.
-import MenuTable from "@/components/MenuTable";
+import MenuTable from "@/components/MenuTable_paging";
 
 // default export는 이 파일의 대표 컴포넌트를 내보냅니다.
 export default function MenusPage() {

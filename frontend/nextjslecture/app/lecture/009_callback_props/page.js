@@ -1,94 +1,145 @@
-'use client'; // state와 폼 이벤트를 사용하는 컴포넌트입니다.
+'use client';
 
 import { useState } from 'react';
 
-function MenuForm({ onAdd }) {
-    const [name, setName] = useState('');
+// 자식 컴포넌트: 입력 UI를 담당하고, 추가할 제목을 부모에게 callback으로 전달합니다.
+function TaskForm({ onAddTask }) {
+    const [title, setTitle] = useState('');
 
     function handleSubmit(event) {
         event.preventDefault();
-        const trimmedName = name.trim();
 
-        if (!trimmedName) return;
+        const trimmedTitle = title.trim();
+        if (!trimmedTitle) return;
 
-        onAdd(trimmedName);
-        setName('');
+        // 부모가 전달한 함수를 호출해 입력값을 부모에게 올려 보냅니다.
+        onAddTask(trimmedTitle);
+        setTitle('');
     }
 
     return (
         <form onSubmit={handleSubmit}>
-            <label htmlFor="new-menu-name">새 메뉴</label>
+            <label htmlFor="task-title">새 할 일: </label>
             <input
-                id="new-menu-name"
-                value={name}
-                onChange={(event) => setName(event.target.value)}
+                id="task-title"
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                placeholder="예: 강의 자료 읽기"
+                required
             />
             <button type="submit">추가</button>
         </form>
     );
 }
 
-function MenuItem({ menu, onToggleFavorite, onDelete }) {
+// 자식 컴포넌트: 할 일 하나를 보여 주고, 완료/삭제 동작을 부모에게 요청합니다.
+function TaskItem({ task, onToggleTask, onDeleteTask }) {
     return (
         <li>
-            <span>
-                {menu.name} {menu.isFavorite && '(즐겨찾기)'}
-            </span>
-            <button type="button" onClick={() => onToggleFavorite(menu.id)}>
-                즐겨찾기 전환
-            </button>
-            <button type="button" onClick={() => onDelete(menu.id)}>
+            <label>
+                <input
+                    type="checkbox"
+                    checked={task.isDone}
+                    onChange={() => onToggleTask(task.id)}
+                />
+                <span
+                    style={{
+                        textDecoration: task.isDone ? 'line-through' : 'none',
+                    }}
+                >
+                    {task.title}
+                </span>
+            </label>
+            <button type="button" onClick={() => onDeleteTask(task.id)}>
                 삭제
             </button>
         </li>
     );
 }
 
-export default function CallbackPropsLecturePage() {
-    const [menus, setMenus] = useState([
-        { id: 1, name: '김치찌개', isFavorite: false },
-        { id: 2, name: '비빔밥', isFavorite: true },
-    ]);
-    const [nextId, setNextId] = useState(3);
-
-    function handleAddMenu(name) {
-        setMenus((currentMenus) => [
-            ...currentMenus,
-            { id: nextId, name, isFavorite: false },
-        ]);
-        setNextId((currentId) => currentId + 1);
+// 자식 컴포넌트: 배열을 화면에 표시하고 각 항목에 callback을 전달합니다.
+function TaskList({ tasks, onToggleTask, onDeleteTask }) {
+    if (tasks.length === 0) {
+        return <p>할 일이 없습니다. 새 할 일을 추가해 보세요.</p>;
     }
 
-    function handleToggleFavorite(id) {
-        setMenus((currentMenus) =>
-            currentMenus.map((menu) =>
-                menu.id === id ? { ...menu, isFavorite: !menu.isFavorite } : menu
+    return (
+        <ul>
+            {tasks.map((task) => (
+                <TaskItem
+                    key={task.id}
+                    task={task}
+                    onToggleTask={onToggleTask}
+                    onDeleteTask={onDeleteTask}
+                />
+            ))}
+        </ul>
+    );
+}
+
+export default function CallbackPropsLecturePage() {
+    // 부모 컴포넌트가 목록 state를 소유합니다.
+    const [tasks, setTasks] = useState([
+        { id: 1, title: '강의 자료 읽기', isDone: false },
+        { id: 2, title: '실습 코드 작성하기', isDone: true },
+        { id: 3, title: '배운 내용 복습하기', isDone: false },
+    ]);
+    const [nextTaskId, setNextTaskId] = useState(4);
+
+    // 자식이 onAddTask(title)을 호출하면 부모가 목록 state를 갱신합니다.
+    function handleAddTask(title) {
+        setTasks((currentTasks) => [
+            ...currentTasks,
+            { id: nextTaskId, title, isDone: false },
+        ]);
+        setNextTaskId((currentId) => currentId + 1);
+    }
+
+    // 자식은 task id만 전달하고, 실제 변경은 부모가 처리합니다.
+    function handleToggleTask(taskId) {
+        setTasks((currentTasks) =>
+            currentTasks.map((task) =>
+                task.id === taskId
+                    ? { ...task, isDone: !task.isDone }
+                    : task
             )
         );
     }
 
-    function handleDelete(id) {
-        setMenus((currentMenus) => currentMenus.filter((menu) => menu.id !== id));
+    function handleDeleteTask(taskId) {
+        setTasks((currentTasks) =>
+            currentTasks.filter((task) => task.id !== taskId)
+        );
     }
+
+    const remainingCount = tasks.filter((task) => !task.isDone).length;
 
     return (
         <main>
-            <h1>Callback Props와 부모·자식 데이터 흐름</h1>
-            <p>부모가 목록 state를 소유하고, 자식은 callback으로 변경을 요청합니다.</p>
+            <h1>Callback Props: 할 일 목록</h1>
+            <p>
+                자식 컴포넌트에서 발생한 동작을 callback으로 부모에게 알리고,
+                부모가 가진 목록 state를 변경합니다.
+            </p>
 
-            <MenuForm onAdd={handleAddMenu} />
+            <h2>1. 할 일 추가</h2>
+            <TaskForm onAddTask={handleAddTask} />
 
-            <h2>메뉴 목록</h2>
-            <ul>
-                {menus.map((menu) => (
-                    <MenuItem
-                        key={menu.id}
-                        menu={menu}
-                        onToggleFavorite={handleToggleFavorite}
-                        onDelete={handleDelete}
-                    />
-                ))}
-            </ul>
+            <h2>2. 할 일 목록 ({remainingCount}개 남음)</h2>
+            <TaskList
+                tasks={tasks}
+                onToggleTask={handleToggleTask}
+                onDeleteTask={handleDeleteTask}
+            />
+
+            <hr />
+            <h2>데이터 흐름</h2>
+            <ol>
+                <li>부모가 목록 state와 추가·완료·삭제 함수를 가집니다.</li>
+                <li>부모가 자식에게 데이터와 callback을 props로 전달합니다.</li>
+                <li>자식은 버튼이나 입력 이벤트가 발생하면 callback을 호출합니다.</li>
+                <li>부모가 state를 바꾸면 목록을 다시 렌더링합니다.</li>
+            </ol>
         </main>
     );
 }
