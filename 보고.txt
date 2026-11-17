@@ -1,0 +1,129 @@
+Next.js 프로젝트 React 교육 내용 포함 여부 보고
+===============================================
+
+분석 범위: frontend\nextjs의 app, components, services 소스와
+package.json, README.md. 경로는 모두 저장소리 루트 기준이다.
+판정 기준: 포함 = 요청한 세부 항목의 코드 사례가 확인됨,
+부분 포함 = 일부만 확인되거나 다른 기술로 유사 기능을 구현함,
+미포함 = 해당 기술의 구현이나 의존성이 확인되지 않음.
+코드와 문서를 정적으로 확인한 결과이며 실제 실행이나 서버 연동 성공을 검증한 것은 아니다.
+주석으로만 작성된 예시는 실행 중인 구현으로 판정하지 않았다.
+
+요약: 포함 6개, 부분 포함 3개, 미포함 4개.
+
+1. React 기초 / React 이해 — 부분 포함
+   - React 및 JSX: 포함. 함수형 React 컴포넌트와 JSX 사용.
+     근거: frontend\nextjs\app\page.js:12, 21, 53.
+   - 개발 환경: 부분 포함. Next.js 개발·빌드·실행 스크립트와 실행 안내가 있다.
+     근거: frontend\nextjs\package.json:5, frontend\nextjs\README.md.
+   - Vite: 미포함. 이 프로젝트는 Vite가 아닌 Next.js 기반이다.
+     근거: frontend\nextjs\package.json:5, 13.
+   - React 개념을 체계적으로 설명하는 별도 기초 강의 자료는 확인하지 않았다.
+
+2. 컴포넌트 / Component — 포함
+   - 컴포넌트 생성·분리·재사용: Home에서 분리된 MenuCard를
+     메뉴 배열의 각 항목마다 사용한다.
+     근거: frontend\nextjs\app\page.js:17, 21, 71,
+     frontend\nextjs\components\MenuCard.js:8.
+   - export/import: 페이지와 컴포넌트의 default export 및 import,
+     API 함수의 이름 있는 export/import가 있다.
+     근거: frontend\nextjs\app\page.js:15, 17, 21,
+     frontend\nextjs\services\api.js:5.
+
+3. 데이터 전달 / Props — 포함
+   - Props·부모와 자식: Home이 menu를 MenuCard에 전달하고,
+     메뉴 목록 페이지가 menus와 onRefresh를 표에 전달한다.
+     근거: frontend\nextjs\app\page.js:71,
+     frontend\nextjs\components\MenuCard.js:8,
+     frontend\nextjs\app\menus\page.js:64.
+   - Children: 루트 레이아웃이 children을 받아 페이지 내용을 표시한다.
+     근거: frontend\nextjs\app\layout.js:24, 33.
+   - 자식에서 부모로의 상호작용: 수정 폼이 전달받은 onSave를 호출한다.
+     근거: frontend\nextjs\app\menus\[id]\edit\page.js:63,
+     frontend\nextjs\components\MenuModifyForm.js:13, 30.
+
+4. 이벤트 처리 / Event — 포함
+   - onSubmit과 이벤트 객체의 preventDefault, onChange를 이용한 입력 처리.
+     근거: frontend\nextjs\app\menus\page.js:46, 55, 59.
+   - onClick에서 메뉴 id를 핸들러에 전달하고, onKeyDown으로 키 입력을 처리한다.
+     근거: frontend\nextjs\components\MenuTable_paging.js:64, 72,
+     frontend\nextjs\components\ChatSidebar.js:66, 105.
+
+5. 상태 관리 기초 / useState — 포함
+   - 상태 변수와 setter: 메뉴·로딩 상태를 선언하고 API 결과로 갱신한다.
+     근거: frontend\nextjs\app\page.js:23, 24, 36, 42.
+   - 상태 변경에 따른 렌더링: 메뉴 상태를 map으로 카드에 표시하고,
+     로딩 상태에 따라 화면을 다르게 반환한다.
+     근거: frontend\nextjs\app\page.js:50, 63, 71.
+   - 이전 상태 기반 갱신: 채팅 메시지 배열에 새 메시지를 추가한다.
+     근거: frontend\nextjs\components\ChatSidebar.js:36.
+
+6. 생명주기와 작업 / useEffect — 포함
+   - 렌더링 후 작업·API 호출·빈 의존성 배열: 홈에서 목록을 요청한다.
+     근거: frontend\nextjs\app\page.js:27.
+   - 의존성 변경: 수정 페이지에서 id를 의존성으로 지정해 메뉴를 조회한다.
+     근거: frontend\nextjs\app\menus\[id]\edit\page.js:31, 44.
+   - 기본 사례가 있다는 의미이며 생명주기 전반이나 정리 함수까지
+     모두 다루었다는 뜻은 아니다.
+
+7. DOM 제어 / useRef — 미포함
+   - useRef를 이용한 DOM 접근과 렌더링 간 변수 유지 사례가 확인되지 않았다.
+
+8. 컴포넌트 간 데이터 공유 / Context API — 미포함
+   - createContext, Context Provider, useContext 사용이 확인되지 않았다.
+   - 부모가 props와 콜백을 전달하는 사례는 있으나 Context API와는 다르다.
+
+9. 재사용 로직 / Custom Hook — 미포함
+   - 프로젝트에서 직접 설계하고 사용하는 커스텀 훅이 확인되지 않았다.
+   - Next.js의 useRouter, useParams 사용은 프로젝트 자체 커스텀 훅 구현과 구분한다.
+
+10. 서버 통신 / Fetch API — 포함
+    - GET: 전체·검색·단건 조회.
+      근거: frontend\nextjs\services\api.js:5, 23, 42.
+    - POST·PUT·DELETE: 등록·수정·삭제 요청.
+      근거: frontend\nextjs\services\api.js:60, 82, 104.
+    - 비동기 처리와 오류 확인: async/await, response.ok 및 오류 전파.
+      근거: frontend\nextjs\services\api.js:5, 7, 9, 16.
+    - Axios와 Promise then 방식의 별도 예제도 있다.
+      근거: frontend\nextjs\services\api_axios.js,
+      frontend\nextjs\services\api_axios_then.js.
+      현재 페이지와 컴포넌트는 services\api.js를 가져온다.
+
+11. 라우팅 / React Router — 부분 포함
+    - React Router의 BrowserRouter, Routes, Route 및 해당 패키지의
+      Link는 사용하지 않는다. package.json에도 의존성이 없다.
+    - 대신 Next.js App Router의 파일 기반 경로와 next/link의 Link를 사용한다.
+      근거: frontend\nextjs\app\menus\page.js,
+      frontend\nextjs\app\menus\new\page.js,
+      frontend\nextjs\components\Header.js:7, 16.
+    - 동적 라우팅은 Next.js의 [id] 경로와 useParams로 구현한다.
+      근거: frontend\nextjs\app\menus\[id]\edit\page.js:12, 25.
+    - 따라서 라우팅 개념은 학습할 수 있지만 React Router 자체의
+      BrowserRouter, Routes, Route 사용법을 이 코드로 확인할 수는 없다.
+
+12. 전역 상태 관리 / Redux Toolkit — 미포함
+    - Redux Toolkit과 React Redux 의존성 및 Store, Slice, Action,
+      Reducer, Dispatch, Selector 구현이 확인되지 않았다.
+
+13. 프로젝트 / React 실전 프로젝트 — 부분 포함
+    - CRUD: 등록 폼, 목록 및 단건 조회, 수정 폼, 삭제 버튼과 API 호출이 있다.
+      근거: frontend\nextjs\components\MenuInputForm.js:45,
+      frontend\nextjs\app\menus\page.js:27,
+      frontend\nextjs\app\menus\[id]\edit\page.js:34, 49,
+      frontend\nextjs\components\MenuTable_paging.js:16.
+    - 검색: 입력한 검색어를 searchMenus로 전달한다.
+      근거: frontend\nextjs\app\menus\page.js:24, 31, 46, 55.
+    - API 연동: 메뉴 및 채팅 요청 함수가 있다.
+      근거: frontend\nextjs\services\api.js:5, 148.
+    - 공통 상태 관리: 메뉴 목록을 부모 상태와 props·콜백으로 자식과
+      공유하지만, Context API나 Redux를 통한 전역 상태 관리는 없다.
+      근거: frontend\nextjs\app\menus\page.js:24, 64,
+      frontend\nextjs\components\MenuTable_paging.js:7, 21.
+
+교육 보완 방향
+--------------
+- Vite 기반 React 개발 환경은 별도 예제가 필요하다.
+- useRef, Context API, 직접 작성한 Custom Hook, Redux Toolkit은
+  각각의 학습 예제나 기능을 추가해야 한다.
+- React Router 자체를 가르치려면 Next.js 라우팅과 구분한 별도 예제가 필요하다.
+- 실제 CRUD 및 API 연동 동작 여부는 백엔드와 환경 설정을 갖춘 후 별도로 검증해야 한다.
