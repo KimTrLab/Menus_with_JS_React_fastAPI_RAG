@@ -2,7 +2,9 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { deleteMenu, recommendMenu } from "@/services/api";
+import { deleteMenu, getMenuAttachmentUrl, recommendMenu } from "@/services/api";
+
+const imageFilePattern = /\.(jpe?g|png|gif|webp|bmp|avif)$/i;
 
 export default function MenuTablePaging({ menus, onRefresh }) {
     const [pagination, setPagination] = useState({ menus, page: 1 });
@@ -42,6 +44,7 @@ export default function MenuTablePaging({ menus, onRefresh }) {
                         <th>이름</th>
                         <th>칼로리</th>
                         <th>설명</th>
+                        <th>첨부파일</th>
                         <th>추천</th>
                         <th>관리</th>
                     </tr>
@@ -50,7 +53,7 @@ export default function MenuTablePaging({ menus, onRefresh }) {
                 <tbody>
                     {currentMenus.length === 0 ? (
                         <tr>
-                            <td colSpan={6}>표시할 메뉴가 없습니다.</td>
+                            <td colSpan={7}>표시할 메뉴가 없습니다.</td>
                         </tr>
                     ) : (
                         currentMenus.map((menu) => (
@@ -59,6 +62,27 @@ export default function MenuTablePaging({ menus, onRefresh }) {
                                 <td>{menu.name}</td>
                                 <td>{menu.calories} kcal</td>
                                 <td>{menu.description}</td>
+                                <td>
+                                    {menu.attachment ? (
+                                        <div className="menu-attachment">
+                                            {imageFilePattern.test(menu.attachment.filename) && (
+                                                /* eslint-disable-next-line @next/next/no-img-element -- 업로드한 원본을 API에서 직접 표시합니다.
+                                                src가 FileResponse 객체를 직접 받는 게 아닙니다. 주소를 통해 요청하고, 서버가 응답한 파일 내용을 브라우저가 표시 */
+                                                <img
+                                                    src={getMenuAttachmentUrl(menu.id, true)}
+                                                    alt={`${menu.name} 첨부 이미지`}
+                                                    className="menu-attachment-thumbnail"
+                                                    width={80}
+                                                    height={80}
+                                                    loading="lazy"  /*이미지가 화면 근처에 보일 때 브라우저가 불러오도록 하여 성능을 최적화합니다. */
+                                                />
+                                            )}
+                                            <a href={getMenuAttachmentUrl(menu.id)}>
+                                                {menu.attachment.filename} 다운로드
+                                            </a>
+                                        </div>
+                                    ) : "-"}
+                                </td>
                                 <td>
                                     {menu.recommendation ?? 0}
                                     <button onClick={() => handleRecommend(menu.id)}>

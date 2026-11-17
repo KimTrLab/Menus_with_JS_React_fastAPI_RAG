@@ -145,6 +145,19 @@ th {
   margin-top: 16px;
 }
 
+.menu-attachment {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
+  overflow-wrap: anywhere;
+}
+
+.menu-attachment-thumbnail {
+  object-fit: cover;
+  border-radius: 4px;
+}
+
 .form-group {
   margin-bottom: 15px;
 }

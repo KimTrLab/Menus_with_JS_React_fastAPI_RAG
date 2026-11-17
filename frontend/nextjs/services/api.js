@@ -1,6 +1,11 @@
 
 const API_SERVER = process.env.NEXT_PUBLIC_API_SERVER;
 
+// 파일 다운로드와 이미지 미리보기는 같은 첨부파일 API를 사용합니다.
+export function getMenuAttachmentUrl(id, preview = false) {
+    return `${API_SERVER}/menus/${id}/attachment${preview ? "?preview=true" : ""}`;
+}
+
 // 전체 메뉴 조회
 export async function getAllMenus() {
     try {
@@ -56,9 +61,8 @@ export async function getMenuOne(id) {
 }
 
 
-// 백엔드 반영 필요: POST /menus가 메뉴 필드와 선택적 file(UploadFile)을
-// multipart/form-data로 받아 파일을 저장하도록 변경해야 합니다.
-// 메뉴 등록
+// 기존 코드: JSON 객체와 FormData를 구분하여 전송했습니다.
+/*
 export async function addMenu(menuData) {
     try {
         const isFormData = menuData instanceof FormData;
@@ -75,6 +79,27 @@ export async function addMenu(menuData) {
 
         return response.json();
 
+    } catch (error) {
+        console.error("메뉴 등록 오류:", error);
+        throw error;
+    }
+}
+*/
+
+// 메뉴 등록: main_file_eazy.py에는 FormData만 전송합니다.
+export async function addMenu(formData) {
+    try {
+        const response = await fetch(`${API_SERVER}/menus`, {
+            method: "POST",
+            // Content-Type은 브라우저가 boundary와 함께 자동으로 지정합니다.
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error(`메뉴 등록 실패: ${response.status}`);
+        }
+
+        return response.json();
     } catch (error) {
         console.error("메뉴 등록 오류:", error);
         throw error;

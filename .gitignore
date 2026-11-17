@@ -79,6 +79,7 @@ htmlcov/
 #chroma_db
 chroma_db/
 models/
+/backend/storage/uploads/
 
 # Next.js
 /frontend/nextjs/node_modules/

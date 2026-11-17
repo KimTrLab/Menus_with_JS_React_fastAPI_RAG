@@ -80,6 +80,14 @@ python -m http.server 5500
 
 등록 시 ID는 서버가 새로 부여합니다. `id` 필드는 API 모델 검증 때문에 요청에도 포함해야 합니다.
 
+### Next.js 첨부파일 등록
+
+Next.js 메뉴 등록 폼과 파일 업로드를 사용하려면 백엔드를 `python -m uvicorn main_file:a --reload --host 127.0.0.1 --port 8000`으로 실행합니다. `main_file.py`의 `POST /menus`는 기존 JSON 요청과 `id`, `name`, `calories`, `description`, 선택적 `file`을 포함한 `multipart/form-data`를 모두 받습니다.
+
+초보자용 `python -m uvicorn main_file_eazy:a --reload --host 127.0.0.1 --port 8000`을 사용할 수도 있습니다. 이 서버의 메뉴 등록은 폼 데이터만 받으며, Next.js 메뉴 등록도 FormData를 전송합니다. 메뉴 수정과 채팅은 기존대로 JSON을 사용합니다.
+
+첨부파일은 `backend/storage/uploads/`에 임의의 이름으로 저장되며, 원래 파일 이름과 저장된 이름은 메뉴의 `attachment` 필드에 기록됩니다. 목록에서 첨부파일을 다운로드할 수 있으며 JPG, PNG, GIF, WebP, BMP, AVIF 파일은 미리보기로 표시됩니다. `GET /menus/{id}/attachment`는 원래 파일 이름으로 다운로드하고 `?preview=true`는 지원하는 이미지를 표시합니다. 메뉴 삭제 시 첨부파일은 자동으로 삭제되지 않습니다. 이 디렉터리는 Git에 포함되지 않으므로 메뉴 JSON과 함께 별도로 백업해야 합니다.
+
 ## 데이터 및 참고 사항
 
 - 백엔드는 시작할 때 `backend/storage/menus_recommendation.json`을 읽고, 등록·수정·삭제·추천 수 변경 결과를 같은 파일에 저장합니다.
