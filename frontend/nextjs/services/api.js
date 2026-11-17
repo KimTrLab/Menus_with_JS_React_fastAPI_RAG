@@ -56,13 +56,17 @@ export async function getMenuOne(id) {
 }
 
 
+// 백엔드 반영 필요: POST /menus가 메뉴 필드와 선택적 file(UploadFile)을
+// multipart/form-data로 받아 파일을 저장하도록 변경해야 합니다.
 // 메뉴 등록
-export async function addMenu(menuObject) {
+export async function addMenu(menuData) {
     try {
+        const isFormData = menuData instanceof FormData;
         const response = await fetch(`${API_SERVER}/menus`, {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(menuObject)
+            // FormData일 때 Content-Type을 직접 지정하면 multipart boundary가 누락될 수 있습니다.
+            headers: isFormData ? undefined : { "Content-Type": "application/json" },
+            body: isFormData ? menuData : JSON.stringify(menuData)
         });
 
         if (!response.ok) {

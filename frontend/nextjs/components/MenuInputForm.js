@@ -20,29 +20,24 @@ export default function MenuInputForm() {
         // 기본 페이지 새로고침 방지
         event.preventDefault();
 
-         // 입력값 가져오기
-        // const menuObject = {
-        //     name: event.target.name.value,
-        //     calories: Number(event.target.calories.value),
-        //     description: event.target.description.value
-        // };
+        // 메뉴 입력값과 파일을 함께 보내기 위해 폼 전체를 FormData로 만듭니다.        
+        // FormData는 브라우저에 내장된 웹 API로, 폼의 입력값과 파일을 서버에 보낼 수 있게 묶어 주는 객체입니다. 
+        // TypeScript의 lib.dom.d.ts는 이 브라우저 API의 타입을 정의한 파일이에요.
+        // 지금 코드에서는 MenuInputForm.js에서 new FormData(event.currentTarget)로 name, calories, description, file 값을 모읍니다. 
+        // 이 객체를 api.js의 fetch 요청 본문으로 보내면, 브라우저가 파일을 포함한 multipart 형식으로 전송합니다.
+        const formData = new FormData(event.currentTarget);
+        // 기존 등록 요청처럼 새 메뉴의 ID도 함께 전달합니다.
+        formData.set("id", "0");
 
-        // FormData는 제출된 form 안에서 name 속성이 지정된 입력값들을 읽게 해 줍니다.
-        const formData = new FormData(event.target);
-
-        // 서버 API가 받을 메뉴 객체를 만듭니다.
-        // formData.get()의 값은 문자열이므로 칼로리는 Number()로 숫자로 변환합니다.
-        const menuObject = {
-            id: 0,  // 새 메뉴이므로 ID는 0으로 설정
-            name: formData.get("name"),
-            calories: Number(formData.get("calories")),
-            description: formData.get("description")
-        };
+        // 파일을 선택하지 않은 경우 빈 파일 값은 요청에서 제외합니다.
+        const file = formData.get("file");
+        if (file instanceof File && file.name === "") {
+            formData.delete("file");
+        }
 
         try {
             // 메뉴 등록 API를 기다린 뒤, 성공하면 알림을 띄우고 메뉴 목록으로 이동합니다.
-            console.log("menuObject_menuinputform.js", menuObject); // 디버깅용 로그 추가
-            await addMenu(menuObject);
+            await addMenu(formData);
             alert("메뉴가 등록되었습니다.");
             // 메뉴 목록 페이지로 이동
             router.push("/menus");
@@ -55,7 +50,7 @@ export default function MenuInputForm() {
     return (
         <div>
             <h2>메뉴 등록</h2>
-            <form onSubmit={handleSave}>
+            <form onSubmit={handleSave} encType="multipart/form-data">
                 <div>
                     <label htmlFor="name">메뉴 이름:</label>
                     <input
@@ -81,6 +76,16 @@ export default function MenuInputForm() {
                     <textarea
                         id="description"
                         name="description"
+                    />
+                </div>
+
+                {/* 백엔드에서도 이 필드명 "file"에 맞춰 업로드를 받아야 합니다. */}
+                <div>
+                    <label htmlFor="file">파일:</label>
+                    <input
+                        type="file"
+                        id="file"
+                        name="file"
                     />
                 </div>
 
