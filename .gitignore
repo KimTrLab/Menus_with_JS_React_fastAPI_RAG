@@ -80,6 +80,8 @@ htmlcov/
 chroma_db/
 models/
 /backend/storage/uploads/
+/backend/storage/user.json
+/backend/storage/.user-*.tmp
 
 # Next.js
 /frontend/nextjs/node_modules/
