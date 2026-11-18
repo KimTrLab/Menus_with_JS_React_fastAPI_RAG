@@ -22,8 +22,8 @@ import {
 // default export는 이 파일의 대표 페이지 컴포넌트를 내보냅니다.
 export default function EditMenuPage() {
     // useParams()가 URL의 [id] 부분을 객체로 반환하고, 구조 분해로 id 값을 꺼냅니다.
-    const { id } = useParams();
-    const router = useRouter();
+    const { id } = useParams();  // 현재 URL의 동적 경로 값 가져오기
+    const router = useRouter();  //페이지 이동 및 뒤로 가기 등 내비게이션 제어
 
     // 아직 조회 전에는 메뉴가 없으므로 null로 시작합니다.
     const [menu, setMenu] = useState(null);
@@ -40,7 +40,7 @@ export default function EditMenuPage() {
         }
 
         loadMenu();
-    // URL의 id가 달라지면 해당 id의 메뉴를 다시 조회합니다.
+        // URL의 id가 달라지면 해당 id의 메뉴를 다시 조회합니다.
     }, [id]);
 
     async function handleSave(menuObject) {
