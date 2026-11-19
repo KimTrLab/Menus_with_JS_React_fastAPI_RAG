@@ -1,7 +1,7 @@
 ## 역할 : 클라이언트로 부터 요청이 오면 요청을 받고 응답해 주는 역할..
 
 from fastapi import FastAPI
-from service import data, rag_google_v1
+from service import data_db, rag_google_v1
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 # from pydantic import Field
@@ -39,7 +39,7 @@ def makeZzang():
 
 @a.get("/menus")  #서비스 이름(요청): /menus   방법 get (조회 의도가 있다.)
 def menus():
-    return data.get_all()  
+    return data_db.get_all()  
     # data객체의 get_all함수에게 자료를 조회해 달라고 요청
     # 그 요청에 대한 응답을 받아서 클라이언트에 응답을 함.
     # 응답 타입이 리스트이다.. 그리고 그 리스트에는 딕셔너리 타입  > json으로 응답
@@ -47,7 +47,7 @@ def menus():
 @a.get("/menus/search")
 def menus_search(word:str =""):
     print('menus_search 진입함')
-    return data.search_Word(word)
+    return data_db.search_Word(word)
 
 
 ## 클라이언트가 보낸 객체를 파이썬은 객체 구조를 이해 못한다.
@@ -74,7 +74,7 @@ def add_menus(menuObject:Menu):   ## menuObject는 변수명 , Menu 타입 : 위
     # 받은 객체를 배열에 추가하는 작업필요
 
     print('받은데이터 확인',menuObject)
-    data.add_menu(menuObject)
+    data_db.add_menu(menuObject)
     return {
         "message":"ok"
     }
@@ -84,7 +84,7 @@ def add_menus(menuObject:Menu):   ## menuObject는 변수명 , Menu 타입 : 위
 @a.delete("/menus/{menu_id}")
 def delete_menu(menu_id : int):
     #data.py 파일에게 삭제해 달라고 요청
-    result = data.delete_menu(menu_id)
+    result = data_db.delete_menu(menu_id)
     if(result is None):
          return{
                 "message":"삭제된거 없어요"
@@ -98,7 +98,7 @@ def delete_menu(menu_id : int):
 @a.get("/menus/{id}")
 def getOne_menu(id : int):
     print(id, '메뉴의 데이터를 요청함')  #로그 남긴다. 디버깅이나 역추적
-    result = data.get_one(id)
+    result = data_db.get_one(id)
     if(result is None):
         return {
             "message":"no"
@@ -111,7 +111,7 @@ def getOne_menu(id : int):
 def update_menu(menudata:Menu):
     # 로그남기기 팁 실제 현업에는 print남기지 않아요.. 자원이슈로..
     print(menudata.id, ' 데이터 글 수정을 요청함')
-    data.update_one(menudata)
+    data_db.update_one(menudata)
     return {
         "message":"ok"
     }
@@ -119,7 +119,7 @@ def update_menu(menudata:Menu):
 @a.post("/menus/recommend/{id}")
 def update_recommend(id:int):
     
-    data.update_recommend(id)
+    data_db.update_recommend(id)
     return{
         "message":"ok"
     }

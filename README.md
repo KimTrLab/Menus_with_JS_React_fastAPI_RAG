@@ -95,3 +95,32 @@ Next.js 메뉴 등록 폼과 파일 업로드를 사용하려면 백엔드를 `p
 - 프런트엔드 검색은 메뉴 이름만 대상으로 합니다.
 - 현재 새 메뉴를 저장할 때 추천 수(`recommendation`)를 초기화하지 않습니다. 따라서 신규 메뉴의 추천 수 표시에 문제가 생길 수 있습니다.
 - CORS는 모든 출처를 허용하도록 설정되어 있어 로컬 개발용으로만 사용하는 것이 적절합니다.
+
+## MariaDB 저장 방식 (선택)
+
+`backend/service/data_db.py`는 `data.py`의 메뉴 함수를 MariaDB로 구현한 별도 파일입니다. 기존 서버는 여전히 JSON을 사용하며, 이 파일을 만들었다고 자동으로 전환되거나 기존 JSON 데이터가 이전되지는 않습니다.
+
+MariaDB에 데이터베이스를 만들고 해당 데이터베이스에서 다음 테이블을 생성하세요.
+
+```sql
+CREATE TABLE menus (
+    id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name TEXT NOT NULL,
+    calories BIGINT NOT NULL,
+    description LONGTEXT NOT NULL,
+    recommendation BIGINT NOT NULL DEFAULT 0,
+    attachment LONGTEXT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+```
+
+`backend`에서 `python -m pip install -r requirements.txt`로 의존성을 설치하고 `backend/.env.mariadb`에 접속 정보를 입력하세요. 이 파일은 Git에 포함되지 않습니다.
+
+```dotenv
+MARIADB_HOST=127.0.0.1
+MARIADB_PORT=3306
+MARIADB_USER=사용자명
+MARIADB_PASSWORD=비밀번호
+MARIADB_DATABASE=데이터베이스명
+```
+
+이미 설정된 환경변수는 파일보다 우선합니다. 사용하려는 서버의 `from service import data, rag_google_v1`을 `from service import data_db as data, rag_google_v1`으로 변경한 뒤 서버를 실행하면 MariaDB를 사용합니다. 첨부파일은 기존과 같이 디스크에 저장되고 파일 정보만 DB에 저장됩니다.

@@ -62,7 +62,7 @@ export async function getMenuOne(id) {
 
 
 // 기존 코드: JSON 객체와 FormData를 구분하여 전송했습니다.
-/*
+
 export async function addMenu(menuData) {
     try {
         const isFormData = menuData instanceof FormData;
@@ -84,27 +84,27 @@ export async function addMenu(menuData) {
         throw error;
     }
 }
-*/
+
 
 // 메뉴 등록: main_file_eazy.py에는 FormData만 전송합니다.
-export async function addMenu(formData) {
-    try {
-        const response = await fetch(`${API_SERVER}/menus`, {
-            method: "POST",
-            // Content-Type은 브라우저가 boundary와 함께 자동으로 지정합니다.
-            body: formData
-        });
+// export async function addMenu(formData) {
+//     try {
+//         const response = await fetch(`${API_SERVER}/menus`, {
+//             method: "POST",
+//             // Content-Type은 브라우저가 boundary와 함께 자동으로 지정합니다.
+//             body: formData
+//         });
 
-        if (!response.ok) {
-            throw new Error(`메뉴 등록 실패: ${response.status}`);
-        }
+//         if (!response.ok) {
+//             throw new Error(`메뉴 등록 실패: ${response.status}`);
+//         }
 
-        return response.json();
-    } catch (error) {
-        console.error("메뉴 등록 오류:", error);
-        throw error;
-    }
-}
+//         return response.json();
+//     } catch (error) {
+//         console.error("메뉴 등록 오류:", error);
+//         throw error;
+//     }
+// }
 
 
 // 메뉴 수정

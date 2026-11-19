@@ -45,7 +45,7 @@ def add_menu(menu, attachment=None):   ## 메뉴 객체와 선택적인 첨부�
 
     ## 전역변수에 있는 next_id 변수를 이 함수 내부에서 사용할께요. 코딩 추가
     global next_id   ## 이 코드는 전역변수에 있는 next_id 변수를 이 함수에서 사용하겠다.
-    ##print("11", menu)
+    print("11", menu)
     new_menu = {
         "id": next_id,
         "name":menu["name"],
